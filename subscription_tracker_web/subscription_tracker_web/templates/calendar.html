@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% import "_icons.html" as ic %}
+{% block title %}Calendar — Subscription Tracker{% endblock %}
+
+{% block content %}
+  <div class="section-head">
+    <h2>CALENDAR <span class="page-sub">renewal dates</span></h2>
+    <div class="cal-nav">
+      <a href="{{ url_for('calendar_view', year=prev_year, month=prev_month) }}" class="icon-btn" title="Previous month">{{ ic.icon('chevron-left', 15) }}</a>
+      <span class="cal-month-label">{{ month_label }}</span>
+      <a href="{{ url_for('calendar_view', year=next_year, month=next_month) }}" class="icon-btn" title="Next month">{{ ic.icon('chevron-right', 15) }}</a>
+    </div>
+  </div>
+
+  <div class="cal-grid">
+    <div class="cal-weekday">Sun</div>
+    <div class="cal-weekday">Mon</div>
+    <div class="cal-weekday">Tue</div>
+    <div class="cal-weekday">Wed</div>
+    <div class="cal-weekday">Thu</div>
+    <div class="cal-weekday">Fri</div>
+    <div class="cal-weekday">Sat</div>
+
+    {% for week in weeks %}
+      {% for day in week %}
+        {% if day %}
+          <div class="cal-cell {{ 'cal-today' if day.is_today else '' }}">
+            <span class="cal-day-num">{{ day.day }}</span>
+            {% if day.subs %}
+              <div class="cal-subs">
+                {% for sub in day.subs %}
+                  {% set style = sub.category | category_style_for %}
+                  <a href="{{ url_for('edit', sub_id=sub.id) }}" class="cal-sub-pill {{ style.gradient }}" title="{{ sub.service_name }} &#8369;{{ '%.2f'|format(sub.cost) }}">{{ sub.service_name }}</a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="cal-cell cal-cell-empty"></div>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </div>
+
+  <p class="cal-note">Monthly subscriptions repeat every month; Yearly subscriptions appear once, in their renewal month.</p>
+{% endblock %}

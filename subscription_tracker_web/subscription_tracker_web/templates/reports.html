@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% import "_icons.html" as ic %}
+{% block title %}Reports — Subscription Tracker{% endblock %}
+
+{% block content %}
+  <div class="section-head">
+    <h2>REPORTS</h2>
+    <div class="report-actions">
+      <a href="{{ url_for('reports_print') }}" class="btn-ghost" target="_blank">{{ ic.icon('printer', 15) }} Print / Save as PDF</a>
+      <a href="{{ url_for('reports_export_csv') }}" class="btn-ghost">{{ ic.icon('download', 15) }} Export CSV</a>
+    </div>
+  </div>
+
+  <div class="reports-grid">
+
+    <div class="report-card">
+      <h3 class="report-card-title">Monthly Cost by Category</h3>
+      {% if breakdown %}
+        <div class="bar-chart">
+          {% for category, amount in breakdown %}
+            {% set style = category | category_style_for %}
+            <div class="bar-row">
+              <span class="bar-label">{{ category }}</span>
+              <div class="bar-track">
+                <div class="bar-fill {{ style.gradient }}" style="width: {{ (amount / max_category * 100)|round(1) }}%;"></div>
+              </div>
+              <span class="bar-value">&#8369;{{ "%.2f"|format(amount) }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="placeholder-text">No active subscriptions yet — add one to see a breakdown.</p>
+      {% endif %}
+    </div>
+
+    <div class="report-card">
+      <h3 class="report-card-title">Projected Cost — Next 6 Months</h3>
+      <p class="report-card-sub">Based on today's Active subscriptions: Monthly ones bill every month, Yearly ones bill once, in their renewal month.</p>
+      {% if projection %}
+        <div class="bar-chart">
+          {% for month_label, amount in projection %}
+            <div class="bar-row">
+              <span class="bar-label">{{ month_label }}</span>
+              <div class="bar-track">
+                <div class="bar-fill grad-streaming" style="width: {{ (amount / max_projection * 100)|round(1) }}%;"></div>
+              </div>
+              <span class="bar-value">&#8369;{{ "%.2f"|format(amount) }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+{% endblock %}

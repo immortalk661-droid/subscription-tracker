@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "_icons.html" as ic %}
+{% block title %}Renewing Soon — Subscription Tracker{% endblock %}
+
+{% block content %}
+  <a href="{{ url_for('index') }}" class="back-link">&larr; Back to dashboard</a>
+  <h2 class="section-title">RENEWING SOON <span class="page-sub">next 7 days</span></h2>
+
+  {% if upcoming %}
+    <div class="trend-grid trend-grid-wide">
+      {% for sub in upcoming %}
+        {% set style = sub.category | category_style_for %}
+        {% set dleft = sub.next_renewal_date | days_until %}
+        <div class="trend-card">
+          <div class="trend-thumb {{ style.gradient }}">
+            <span class="trend-badge">
+              {% if dleft is none %}&mdash;{% elif dleft <= 0 %}Due now{% else %}{{ dleft }}d left{% endif %}
+            </span>
+            {{ ic.icon(style.icon, 30) }}
+          </div>
+          <p class="trend-title">{{ sub.service_name }}</p>
+          <p class="trend-sub">{{ sub.category }} &middot; &#8369;{{ "%.2f"|format(sub.cost) }} / {{ sub.billing_cycle }}</p>
+          <p class="trend-sub">Renews {{ sub.next_renewal_date }}</p>
+          <a href="{{ url_for('edit', sub_id=sub.id) }}" class="trend-btn">MANAGE</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state"><p>Nothing renewing in the next 7 days.</p></div>
+  {% endif %}
+{% endblock %}

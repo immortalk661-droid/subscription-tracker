@@ -1,0 +1,72 @@
+{% import "_icons.html" as ic %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Subscription Tracker{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="shell">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2l5 5-5 5-5-5z" fill="#fff"/><path d="M12 12l5 5-5 5-5-5z" fill="#fff" opacity="0.55"/></svg>
+      </div>
+      <a href="{{ url_for('index') }}" class="side-link {{ 'active' if active_page == 'dashboard' else '' }}" title="Dashboard">{{ ic.icon('grid') }}</a>
+      <a href="{{ url_for('add') }}" class="side-link {{ 'active' if active_page == 'add' else '' }}" title="Add subscription">{{ ic.icon('file-plus') }}</a>
+      <a href="{{ url_for('renewals') }}" class="side-link {{ 'active' if active_page == 'renewals' else '' }}" title="Renewing soon">
+        {{ ic.icon('bell') }}
+        {% if renewal_count and renewal_count > 0 %}<span class="badge-dot"></span>{% endif %}
+      </a>
+      <a href="{{ url_for('calendar_view') }}" class="side-link {{ 'active' if active_page == 'calendar' else '' }}" title="Calendar">{{ ic.icon('calendar') }}</a>
+      <a href="{{ url_for('reports_view') }}" class="side-link {{ 'active' if active_page == 'reports' else '' }}" title="Reports">{{ ic.icon('chart') }}</a>
+      <a href="{{ url_for('profile') }}" class="side-link {{ 'active' if active_page == 'profile' else '' }}" title="Profile">{{ ic.icon('user') }}</a>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <span>SUBSCRIPTION TRACKER</span>
+        </div>
+
+        <form class="search-form" method="GET" action="{{ url_for('index') }}">
+          <div class="search-box">
+            {{ ic.icon('search', 16) }}
+            <input type="text" name="q" placeholder="Search subscriptions" value="{{ search_query or '' }}">
+          </div>
+        </form>
+
+        <div class="topbar-right">
+          <a href="{{ url_for('profile') }}" class="avatar" title="{{ current_username or '' }}">{{ (current_username[:3]|upper) if current_username else 'SUB' }}</a>
+          <a href="{{ url_for('add') }}" class="add-btn" title="Add subscription">
+            {{ ic.icon('plus', 20) }}
+            <span>Add</span>
+          </a>
+          <form method="POST" action="{{ url_for('logout') }}" style="margin:0;">
+            <button type="submit" class="logout-btn">Log Out</button>
+          </form>
+        </div>
+      </header>
+
+      <div class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-stack">
+              {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

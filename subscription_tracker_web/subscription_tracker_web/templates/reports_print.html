@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscription Report — {{ username }}</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, Helvetica, Arial, sans-serif; color: #1a1a1a; margin: 0; padding: 32px; max-width: 800px; margin: 0 auto; }
+    h1 { font-size: 22px; margin: 0 0 2px; }
+    .meta { color: #666; font-size: 13px; margin-bottom: 24px; }
+    h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; margin: 28px 0 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+    .totals { display: flex; gap: 24px; margin-bottom: 8px; }
+    .totals div { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 12px 16px; }
+    .totals .label { font-size: 11px; color: #777; }
+    .totals .value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
+    th { color: #555; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+    .status-active { color: #0a7a3f; font-weight: 600; }
+    .status-cancelled { color: #999; }
+    .print-btn { margin-top: 28px; padding: 10px 18px; border-radius: 8px; border: none; background: #6355E0; color: white; font-weight: 600; cursor: pointer; font-size: 14px; }
+    @media print { .print-btn { display: none; } body { padding: 0; } }
+  </style>
+</head>
+<body>
+  <h1>Subscription Report</h1>
+  <div class="meta">{{ username }} &middot; Generated {{ generated_on }}</div>
+
+  <h2>Totals</h2>
+  <div class="totals">
+    <div><div class="label">MONTHLY COST</div><div class="value">&#8369;{{ "%.2f"|format(monthly_total) }}</div></div>
+    <div><div class="label">YEARLY COST</div><div class="value">&#8369;{{ "%.2f"|format(yearly_total) }}</div></div>
+  </div>
+
+  <h2>Cost by Category</h2>
+  <table>
+    <tr><th>Category</th><th>Monthly Cost</th></tr>
+    {% for category, amount in breakdown %}
+      <tr><td>{{ category }}</td><td>&#8369;{{ "%.2f"|format(amount) }}</td></tr>
+    {% else %}
+      <tr><td colspan="2">No active subscriptions.</td></tr>
+    {% endfor %}
+  </table>
+
+  <h2>All Subscriptions</h2>
+  <table>
+    <tr><th>Service</th><th>Category</th><th>Cost</th><th>Cycle</th><th>Renews</th><th>Status</th></tr>
+    {% for sub in subscriptions %}
+      <tr>
+        <td>{{ sub.service_name }}</td>
+        <td>{{ sub.category }}</td>
+        <td>&#8369;{{ "%.2f"|format(sub.cost) }}</td>
+        <td>{{ sub.billing_cycle }}</td>
+        <td>{{ sub.next_renewal_date }}</td>
+        <td class="status-{{ sub.status|lower }}">{{ sub.status }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6">No subscriptions yet.</td></tr>
+    {% endfor %}
+  </table>
+
+  <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+</body>
+</html>

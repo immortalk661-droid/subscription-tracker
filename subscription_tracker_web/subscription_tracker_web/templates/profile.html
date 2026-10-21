@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Profile — Subscription Tracker{% endblock %}
+
+{% block content %}
+  <a href="{{ url_for('index') }}" class="back-link">&larr; Back to dashboard</a>
+  <h2 class="section-title">PROFILE</h2>
+
+  <div class="profile-grid">
+
+    <div class="report-card">
+      <h3 class="report-card-title">Account</h3>
+      <p class="report-card-sub">Logged in as <strong>{{ current_username }}</strong></p>
+    </div>
+
+    <div class="report-card">
+      <h3 class="report-card-title">Change Password</h3>
+      <form method="POST" action="{{ url_for('profile_change_password') }}" class="sub-form">
+        <label class="field-label" for="current_password">Current Password</label>
+        <input class="field-input" type="password" id="current_password" name="current_password" required>
+
+        <label class="field-label" for="new_password">New Password</label>
+        <input class="field-input" type="password" id="new_password" name="new_password" minlength="4" required>
+
+        <label class="field-label" for="confirm_password">Confirm New Password</label>
+        <input class="field-input" type="password" id="confirm_password" name="confirm_password" minlength="4" required>
+
+        <button type="submit" class="btn btn-primary btn-full">Change Password</button>
+      </form>
+    </div>
+
+    <div class="report-card danger-zone">
+      <h3 class="report-card-title danger-title">Delete Account</h3>
+      <p class="report-card-sub">This permanently deletes your account and every subscription in it. This cannot be undone.</p>
+      <form method="POST" action="{{ url_for('profile_delete_account') }}" class="sub-form"
+            onsubmit="return confirm('This will permanently delete your account and all your subscriptions. Continue?');">
+        <label class="field-label" for="confirm_username">Type your username (<strong>{{ current_username }}</strong>) to confirm</label>
+        <input class="field-input" type="text" id="confirm_username" name="confirm_username" placeholder="{{ current_username }}" required>
+        <button type="submit" class="btn btn-danger btn-full">Delete My Account</button>
+      </form>
+    </div>
+
+  </div>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In — Subscription Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-body">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <span class="brand-mark"></span>
+      <span>SUBSCRIPTION TRACKER</span>
+    </div>
+    <div class="auth-card">
+      <h1 class="form-title">Log In</h1>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-stack">
+            {% for category, message in messages %}
+              <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <form method="POST" class="sub-form">
+        <label class="field-label" for="username">Username</label>
+        <input class="field-input" type="text" id="username" name="username" value="{{ username }}" required autofocus>
+        <label class="field-label" for="password">Password</label>
+        <input class="field-input" type="password" id="password" name="password" required>
+        <button type="submit" class="btn btn-primary btn-full">Log In</button>
+      </form>
+      <p class="auth-switch">Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% import "_icons.html" as ic %}
+{% block title %}Dashboard — Subscription Tracker{% endblock %}
+
+{% block content %}
+
+  {% if upcoming %}
+    <div class="alert-banner">
+      {{ ic.icon('alert', 18) }}
+      <div class="alert-text">
+        <strong>{{ upcoming|length }} subscription{{ 's' if upcoming|length != 1 else '' }} renewing soon</strong>
+        <div class="alert-list">
+          {% for sub in upcoming %}{{ sub.service_name }} &mdash; {{ sub.next_renewal_date }}{% if not loop.last %}, {% endif %}{% endfor %}
+          &middot; <a href="{{ url_for('renewals') }}" class="alert-link">View all &rsaquo;</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="stats-strip">
+    <div class="stat-pill">
+      <div class="label">Monthly cost</div>
+      <div class="value">&#8369;{{ "%.2f"|format(monthly_total) }}</div>
+    </div>
+    <div class="stat-pill">
+      <div class="label">Yearly cost</div>
+      <div class="value">&#8369;{{ "%.2f"|format(yearly_total) }}</div>
+    </div>
+  </div>
+
+  <div class="dashboard-single">
+    <div class="section-head">
+      <h2>YOUR SUBSCRIPTIONS</h2>
+      <div class="filter-tabs">
+        {% for option in ["All", "Active", "Cancelled"] %}
+          <a href="{{ url_for('index', status=option, q=search_query) }}"
+             class="filter-tab {{ 'active' if status_filter == option else '' }}">{{ option }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if subscriptions %}
+      <div class="update-list">
+        {% for sub in subscriptions %}
+          {% set style = sub.category | category_style_for %}
+          <div class="update-row {{ 'is-cancelled' if sub.status == 'Cancelled' else '' }}">
+            <div class="update-icon {{ style.gradient }}">{{ ic.icon(style.icon, 20) }}</div>
+            <div class="update-body">
+              <p class="update-title">{{ sub.service_name }}</p>
+              <p class="update-sub">{{ sub.category }} &middot; &#8369;{{ "%.2f"|format(sub.cost) }} / {{ sub.billing_cycle }} &middot; Renews {{ sub.next_renewal_date }}</p>
+            </div>
+            <div class="update-actions">
+              <span class="update-status {{ sub.status|lower }}">{{ sub.status }}</span>
+              <a href="{{ url_for('edit', sub_id=sub.id) }}" class="icon-btn" title="Edit">{{ ic.icon('edit', 15) }}</a>
+              {% if sub.status == "Active" %}
+                <span class="icon-btn" title="Mark as cancelled">
+                  <form method="POST" action="{{ url_for('cancel', sub_id=sub.id) }}">
+                    <button type="submit">{{ ic.icon('pause', 15) }}</button>
+                  </form>
+                </span>
+              {% endif %}
+              <span class="icon-btn danger" title="Delete">
+                <form method="POST" action="{{ url_for('delete', sub_id=sub.id) }}"
+                      onsubmit="return confirm('Delete this subscription permanently?');">
+                  <button type="submit">{{ ic.icon('trash', 15) }}</button>
+                </form>
+              </span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p>No subscriptions match{% if search_query %} "{{ search_query }}"{% endif %}.</p>
+        <p><a href="{{ url_for('add') }}" class="manage-link">Add your first subscription &rsaquo;</a></p>
+      </div>
+    {% endif %}
+  </div>
+
+{% endblock %}
