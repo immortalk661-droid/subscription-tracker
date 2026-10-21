@@ -21,8 +21,13 @@ from subscription_manager import SubscriptionManager
 from auth_manager import AuthManager
 from report_manager import ReportManager
 
+import os
+
 app = Flask(__name__)
-app.secret_key = "sdf04-subscription-tracker"
+app.secret_key =
+os.environ.get("SECRET_KEY", "dev-only-change-me")
+
+initialize_database()
 
 manager = SubscriptionManager()
 auth = AuthManager()
