@@ -24,9 +24,10 @@ from report_manager import ReportManager
 import os
 
 app = Flask(__name__)
-app.secret_key =
-os.environ.get("SECRET_KEY", "dev-only-change-me")
+app.secret_key = os.environ.get("SECRET_KEY")
 
+if not app.secret_key:
+    raise RuntimeError("SECRET_KEY is not configured!")
 initialize_database()
 
 manager = SubscriptionManager()
