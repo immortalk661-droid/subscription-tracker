@@ -7,8 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='theme.js') }}"></script>
 </head>
 <body class="auth-body">
+  {% set extra_class = "theme-toggle-floating" %}{% include "_theme_toggle.html" %}
   <div class="auth-wrap">
     <div class="auth-brand">
       <span class="brand-mark"></span>
