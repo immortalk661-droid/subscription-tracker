@@ -2,14 +2,23 @@
 {% block title %}Profile — Subscription Tracker{% endblock %}
 
 {% block content %}
+  <div class="profile-page">
   <a href="{{ url_for('index') }}" class="back-link">&larr; Back to dashboard</a>
-  <h2 class="section-title">PROFILE</h2>
+
+  <div class="profile-header">
+    <div class="profile-avatar">{{ current_username[:1]|upper }}</div>
+    <div class="profile-info">
+      <h2 class="profile-name">{{ current_username }}</h2>
+      <p class="profile-sub">Subscription Tracker account</p>
+    </div>
+  </div>
 
   <div class="profile-grid">
 
     <div class="report-card">
-      <h3 class="report-card-title">Account</h3>
-      <p class="report-card-sub">Logged in as <strong>{{ current_username }}</strong></p>
+      <h3 class="report-card-title">Appearance</h3>
+      <p class="report-card-sub">Choose a theme that is comfortable for your eyes.</p>
+      <button type="button" class="btn btn-secondary btn-full" data-theme-toggle>Switch light / dark mode</button>
     </div>
 
     <div class="report-card">
@@ -39,5 +48,6 @@
       </form>
     </div>
 
+  </div>
   </div>
 {% endblock %}
