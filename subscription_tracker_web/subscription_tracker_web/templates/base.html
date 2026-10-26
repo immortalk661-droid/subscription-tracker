@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='theme.js') }}"></script>
 </head>
 <body>
   <div class="shell">
@@ -42,11 +43,8 @@
         </form>
 
         <div class="topbar-right">
+          {% include "_theme_toggle.html" %}
           <a href="{{ url_for('profile') }}" class="avatar" title="{{ current_username or '' }}">{{ (current_username[:3]|upper) if current_username else 'SUB' }}</a>
-          <a href="{{ url_for('add') }}" class="add-btn" title="Add subscription">
-            {{ ic.icon('plus', 20) }}
-            <span>Add</span>
-          </a>
           <form method="POST" action="{{ url_for('logout') }}" style="margin:0;">
             <button type="submit" class="logout-btn">Log Out</button>
           </form>
@@ -68,5 +66,11 @@
       </div>
     </div>
   </div>
+
+  {% if active_page != 'add' %}
+  <a href="{{ url_for('add') }}" class="fab" title="Add subscription" aria-label="Add subscription">
+    {{ ic.icon('plus', 26) }}
+  </a>
+  {% endif %}
 </body>
 </html>
