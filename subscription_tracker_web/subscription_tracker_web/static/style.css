@@ -220,3 +220,61 @@ button { font-family: var(--font); }
   .bar-row { grid-template-columns: 70px 1fr 56px; gap: 6px; }
   .report-actions { width: 100%; }
 }
+
+/* =====================================================================
+   LIGHT THEME  (applied when <html data-theme="light">)
+   Only the color variables change, so every page follows automatically.
+   ===================================================================== */
+:root[data-theme="light"] {
+  --bg: #F4F5FA;
+  --sidebar-bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-alt: #EDEFF6;
+  --border: #E0E3EC;
+  --text: #1B1C24;
+  --text-secondary: #4A4D5C;
+  --text-muted: #6B6E7E;
+  --primary: #6355E0;
+  --primary-dark: #5143C9;
+  --success: #059669;
+  --success-bg: #D8F4E8;
+  --danger: #DC2626;
+  --danger-bg: #FDE3E3;
+  --warning: #B45309;
+  --warning-bg: #FEF3DA;
+  --warning-border: #F1D58A;
+}
+:root { color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+body, .sidebar, .topbar, .search-box, .auth-card, .report-card, .logout-btn { transition: background-color .2s, color .2s, border-color .2s; }
+
+/* ---------- Theme toggle button ---------- */
+.theme-toggle { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; padding: 0; }
+.theme-toggle:hover { background: var(--surface-alt); color: var(--text); }
+.theme-toggle .icon-moon { display: none; }
+:root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+.theme-toggle-floating { position: fixed; top: 16px; right: 16px; z-index: 50; }
+
+/* ---------- Floating "+" button (Telegram style) ---------- */
+.fab { position: fixed; right: 24px; bottom: 24px; width: 58px; height: 58px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(99, 85, 224, 0.45); z-index: 40; transition: transform .15s, background-color .15s; }
+.fab:hover { background: var(--primary-dark); transform: scale(1.07); }
+.fab:active { transform: scale(0.96); }
+.content { padding-bottom: 100px; }
+
+/* ---------- Profile: centered, avatar on the left, name on the right ---------- */
+.profile-page { max-width: 480px; margin: 0 auto; }
+.profile-header { display: flex; align-items: center; gap: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; margin-bottom: 16px; }
+.profile-avatar { width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #8B7CFF, #6355E0); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 36px; flex-shrink: 0; }
+.profile-info { min-width: 0; }
+.profile-name { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 700; overflow-wrap: anywhere; }
+.profile-sub { margin: 4px 0 0; font-size: 13px; color: var(--text-muted); }
+.profile-page .profile-grid { max-width: none; }
+.btn-secondary { background: var(--surface-alt); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+
+@media (max-width: 600px) {
+  .fab { right: 16px; bottom: 16px; width: 54px; height: 54px; }
+  .profile-avatar { width: 68px; height: 68px; font-size: 28px; }
+  .theme-toggle { width: 36px; height: 36px; }
+}
